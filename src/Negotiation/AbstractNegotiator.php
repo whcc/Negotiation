@@ -43,7 +43,7 @@ abstract class AbstractNegotiator
         $matches         = $this->findMatches($acceptedHeaders, $acceptedPriorities);
         $specificMatches = array_reduce($matches, 'Negotiation\Match::reduce', []);
 
-        usort($specificMatches, 'Negotiation\Match::compare');
+        usort($specificMatches, 'Negotiation\MatchAccept::compare');
 
         $match = array_shift($specificMatches);
 
@@ -62,7 +62,7 @@ abstract class AbstractNegotiator
      * @param AcceptHeader $priority
      * @param integer      $index
      *
-     * @return Match|null Headers matched
+     * @return MatchAccept|null Headers matched
      */
     protected function match(AcceptHeader $header, AcceptHeader $priority, $index)
     {
@@ -74,7 +74,7 @@ abstract class AbstractNegotiator
         if ($equal || $ac === '*') {
             $score = 1 * $equal;
 
-            return new Match($header->getQuality() * $priority->getQuality(), $score, $index);
+            return new MatchAccept($header->getQuality() * $priority->getQuality(), $score, $index);
         }
 
         return null;
@@ -100,9 +100,9 @@ abstract class AbstractNegotiator
      * @param AcceptHeader[] $headerParts
      * @param Priority[]     $priorities  Configured priorities
      *
-     * @return Match[] Headers matched
+     * @return MatchAccept[] Headers matched
      */
-    private function findMatches(array $headerParts, array $priorities)
+    private function findMatchAcceptes(array $headerParts, array $priorities)
     {
         $matches = [];
         foreach ($priorities as $index => $p) {

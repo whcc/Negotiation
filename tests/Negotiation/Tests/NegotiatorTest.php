@@ -6,7 +6,7 @@ use Negotiation\Exception\InvalidArgument;
 use Negotiation\Exception\InvalidMediaType;
 use Negotiation\Negotiator;
 use Negotiation\Accept;
-use Negotiation\Match;
+use Negotiation\MatchAccept;
 
 class NegotiatorTest extends TestCase
 {
@@ -136,58 +136,58 @@ class NegotiatorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderForTestFindMatches
+     * @dataProvider dataProviderForTestFindMatchAcceptes
      */
-    public function testFindMatches($headerParts, $priorities, $expected)
+    public function testFindMatchAcceptes($headerParts, $priorities, $expected)
     {
         $neg = new Negotiator();
 
-        $matches = $this->call_private_method('Negotiation\Negotiator', 'findMatches', $neg, array($headerParts, $priorities));
+        $matches = $this->call_private_method('Negotiation\Negotiator', 'findMatchAcceptes', $neg, array($headerParts, $priorities));
 
         $this->assertEquals($expected, $matches);
     }
 
-    public static function dataProviderForTestFindMatches()
+    public static function dataProviderForTestFindMatchAcceptes()
     {
         return array(
             array(
                 array(new Accept('text/html; charset=UTF-8'), new Accept('image/png; foo=bar; q=0.7'), new Accept('*/*; foo=bar; q=0.4')),
                 array(new Accept('text/html; charset=UTF-8'), new Accept('image/png; foo=bar'), new Accept('application/pdf')),
                 array(
-                    new Match(1.0, 111, 0),
-                    new Match(0.7, 111, 1),
-                    new Match(0.4, 1,   1),
+                    new MatchAccept(1.0, 111, 0),
+                    new MatchAccept(0.7, 111, 1),
+                    new MatchAccept(0.4, 1,   1),
                 )
             ),
             array(
                 array(new Accept('text/html'), new Accept('image/*; q=0.7')),
                 array(new Accept('text/html; asfd=qwer'), new Accept('image/png'), new Accept('application/pdf')),
                 array(
-                    new Match(1.0, 110, 0),
-                    new Match(0.7, 100, 1),
+                    new MatchAccept(1.0, 110, 0),
+                    new MatchAccept(0.7, 100, 1),
                 )
             ),
             array( # https://tools.ietf.org/html/rfc7231#section-5.3.2
                 array(new Accept('text/*; q=0.3'), new Accept('text/html; q=0.7'), new Accept('text/html; level=1'), new Accept('text/html; level=2; q=0.4'), new Accept('*/*; q=0.5')),
                 array(new Accept('text/html; level=1'), new Accept('text/html'), new Accept('text/plain'), new Accept('image/jpeg'), new Accept('text/html; level=2'), new Accept('text/html; level=3')),
                 array(
-                    new Match(0.3,    100,    0),
-                    new Match(0.7,    110,    0),
-                    new Match(1.0,    111,    0),
-                    new Match(0.5,      0,    0),
-                    new Match(0.3,    100,    1),
-                    new Match(0.7,    110,    1),
-                    new Match(0.5,      0,    1),
-                    new Match(0.3,    100,    2),
-                    new Match(0.5,      0,    2),
-                    new Match(0.5,      0,    3),
-                    new Match(0.3,    100,    4),
-                    new Match(0.7,    110,    4),
-                    new Match(0.4,    111,    4),
-                    new Match(0.5,      0,    4),
-                    new Match(0.3,    100,    5),
-                    new Match(0.7,    110,    5),
-                    new Match(0.5,      0,    5),
+                    new MatchAccept(0.3,    100,    0),
+                    new MatchAccept(0.7,    110,    0),
+                    new MatchAccept(1.0,    111,    0),
+                    new MatchAccept(0.5,      0,    0),
+                    new MatchAccept(0.3,    100,    1),
+                    new MatchAccept(0.7,    110,    1),
+                    new MatchAccept(0.5,      0,    1),
+                    new MatchAccept(0.3,    100,    2),
+                    new MatchAccept(0.5,      0,    2),
+                    new MatchAccept(0.5,      0,    3),
+                    new MatchAccept(0.3,    100,    4),
+                    new MatchAccept(0.7,    110,    4),
+                    new MatchAccept(0.4,    111,    4),
+                    new MatchAccept(0.5,      0,    4),
+                    new MatchAccept(0.3,    100,    5),
+                    new MatchAccept(0.7,    110,    5),
+                    new MatchAccept(0.5,      0,    5),
                 )
             )
         );
