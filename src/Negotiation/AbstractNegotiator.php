@@ -41,7 +41,7 @@ abstract class AbstractNegotiator
             $acceptedPriorities[] = $this->acceptFactory($p);
         }
         $matches         = $this->findMatches($acceptedHeaders, $acceptedPriorities);
-        $specificMatches = array_reduce($matches, 'Negotiation\Match::reduce', []);
+        $specificMatches = array_reduce($matches, 'Negotiation\MatchAccept::reduce', []);
 
         usort($specificMatches, 'Negotiation\MatchAccept::compare');
 
