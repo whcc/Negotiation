@@ -102,7 +102,7 @@ abstract class AbstractNegotiator
      *
      * @return MatchAccept[] Headers matched
      */
-    private function findMatchAcceptes(array $headerParts, array $priorities)
+    private function findMatches(array $headerParts, array $priorities)
     {
         $matches = [];
         foreach ($priorities as $index => $p) {
